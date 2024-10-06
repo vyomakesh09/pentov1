@@ -175,38 +175,42 @@ def safely_exploit_vulnerability(vulnerability: Dict, endpoint: str) -> Dict:
     return result
 
 def generate_security_report(vulnerabilities: List[Dict], exploitation_results: List[Dict]) -> str:
-    report = "Security Assessment Report\n"
-    report += "==========================\n\n"
-    
-    report += "1. Executive Summary\n"
-    report += "--------------------\n"
-    total_vulns = len(vulnerabilities)
-    exploited_vulns = sum(1 for result in exploitation_results if result["exploitation_successful"])
-    report += f"Total vulnerabilities found: {total_vulns}\n"
-    report += f"Successfully exploited: {exploited_vulns}\n\n"
-    
-    report += "2. Detailed Findings\n"
-    report += "--------------------\n"
-    for vuln, exploit_result in zip(vulnerabilities, exploitation_results):
-        report += f"Vulnerability: {vuln['type']}\n"
-        report += f"Severity: {vuln['severity']}\n"
-        report += f"Description: {vuln['description']}\n"
-        report += f"Exploitation: {'Successful' if exploit_result['exploitation_successful'] else 'Unsuccessful'}\n"
-        if exploit_result['exploitation_successful']:
-            report += f"Exploitation Details: {exploit_result['details']}\n"
-        report += "\n"
-    
-    report += "3. Recommendations\n"
-    report += "-------------------\n"
-    for vuln in vulnerabilities:
-        report += f"- {vuln['type']}: "
-        if vuln['type'] == "JWT None Algorithm":
-            report += "Ensure that the 'none' algorithm is not accepted for JWT validation.\n"
-        elif vuln['type'] == "Weak JWT Signature":
-            report += "Use a strong, unique secret key for JWT signing. Consider using asymmetric algorithms like RS256.\n"
-        elif vuln['type'] == "Insecure redirect_uri":
-            report += "Implement a whitelist of allowed redirect URIs and validate all redirect attempts against this list.\n"
-        elif vuln['type'] == "Weak credentials":
-            report += "Implement strong password policies and consider using multi-factor authentication.\n"
-    
-    return report
+    try:
+        report = "Security Assessment Report\n"
+        report += "==========================\n\n"
+        
+        report += "1. Executive Summary\n"
+        report += "--------------------\n"
+        total_vulns = len(vulnerabilities)
+        exploited_vulns = sum(1 for result in exploitation_results if result["exploitation_successful"])
+        report += f"Total vulnerabilities found: {total_vulns}\n"
+        report += f"Successfully exploited: {exploited_vulns}\n\n"
+        
+        report += "2. Detailed Findings\n"
+        report += "--------------------\n"
+        for vuln, exploit_result in zip(vulnerabilities, exploitation_results):
+            report += f"Vulnerability: {vuln['type']}\n"
+            report += f"Severity: {vuln['severity']}\n"
+            report += f"Description: {vuln['description']}\n"
+            report += f"Exploitation: {'Successful' if exploit_result['exploitation_successful'] else 'Unsuccessful'}\n"
+            if exploit_result['exploitation_successful']:
+                report += f"Exploitation Details: {exploit_result['details']}\n"
+            report += "\n"
+        
+        report += "3. Recommendations\n"
+        report += "-------------------\n"
+        for vuln in vulnerabilities:
+            report += f"- {vuln['type']}: "
+            if vuln['type'] == "JWT None Algorithm":
+                report += "Ensure that the 'none' algorithm is not accepted for JWT validation.\n"
+            elif vuln['type'] == "Weak JWT Signature":
+                report += "Use a strong, unique secret key for JWT signing. Consider using asymmetric algorithms like RS256.\n"
+            elif vuln['type'] == "Insecure redirect_uri":
+                report += "Implement a whitelist of allowed redirect URIs and validate all redirect attempts against this list.\n"
+            elif vuln['type'] == "Weak credentials":
+                report += "Implement strong password policies and consider using multi-factor authentication.\n"
+        
+        return report
+    except Exception as e:
+        print(f"Error generating security report: {str(e)}")
+        return "Error generating security report"
