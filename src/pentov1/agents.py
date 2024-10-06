@@ -1,7 +1,7 @@
 from langchain.agents import Tool
 import os
 from crewai import Agent
-from langchain_mistralai.chat_models import ChatMistralAI
+from langchain_mistralai import ChatMistralAI
 from pentov1.tools import (
     discover_endpoints,
     scan_vulnerability,
@@ -18,9 +18,9 @@ if not api_key:
 print(f"API Key: {api_key[:5]}...{api_key[-5:]}")  # Print first and last 5 characters
 
 mistral = ChatMistralAI(
-    model="mistral-large-2",
-    temperature=0.1,
-    api_key=api_key
+    model="mistral-medium",
+    mistral_api_key=api_key,
+    temperature=0.1
 )
 
 # Initialize tools
