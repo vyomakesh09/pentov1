@@ -45,7 +45,7 @@ def process_results(target_site: str, results):
     print(f"Security assessment results saved to: {file_path}")
 
 def run():
-    target_site = "https://mistral.ai/"
+    target_site = "https://example.com"
     results = run_security_assessment(target_site)
     print("Security assessment completed. Check the generated report for details.")
 
